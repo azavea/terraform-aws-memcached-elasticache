@@ -53,7 +53,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
     CacheClusterId = "${aws_elasticache_cluster.memcached.id}"
   }
 
-  alarm_actions = ["${var.alarm_actions}"]
+  alarm_actions = "${var.alarm_actions}"
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_memory" {
@@ -72,5 +72,5 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
     CacheClusterId = "${aws_elasticache_cluster.memcached.id}"
   }
 
-  alarm_actions = ["${var.alarm_actions}"]
+  alarm_actions = "${var.alarm_actions}"
 }
