@@ -44,7 +44,7 @@ module "cache" {
 - `vpc_id` - ID of VPC meant to house the cache
 - `project` - Name of the project making use of the cluster (default: `Unknown`)
 - `environment` - Name of environment the cluster is targeted for (default: `Unknown`)
-- `cache_identifier` - Name used as ElastiCache cluster ID
+- `cache_identifier` - Name used as ElastiCache cluster ID, truncated at 16 characters
 - `desired_clusters` - Number of cache clusters
 - `instance_type` - Instance type for cache instance (default: `cache.t2.micro`)
 - `engine_version` - Cache engine version (default: `3.2.4`)
