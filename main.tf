@@ -15,11 +15,16 @@ resource "aws_security_group" "memcached" {
 # ElastiCache resources
 #
 resource "aws_elasticache_cluster" "memcached" {
-  cluster_id             = "${lower(var.cache_identifier)}"
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  cluster_id             = "${format("%.16s-%.4s", lower(var.cache_identifier), md5(var.instance_type))}"
   engine                 = "memcached"
   engine_version         = "${var.engine_version}"
   node_type              = "${var.instance_type}"
   num_cache_nodes        = "${var.desired_clusters}"
+  az_mode                = "${var.desired_clusters == 1 ? "single-az" : "cross-az"}"
   parameter_group_name   = "${var.parameter_group}"
   subnet_group_name      = "${var.subnet_group}"
   security_group_ids     = ["${aws_security_group.memcached.id}"]
