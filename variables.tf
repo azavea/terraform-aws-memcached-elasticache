@@ -11,7 +11,7 @@ variable "vpc_id" {}
 variable "cache_identifier" {}
 
 variable "parameter_group" {
-  default = "memcached1.4"
+  default = "default.memcached1.4"
 }
 
 variable "subnet_group" {}
