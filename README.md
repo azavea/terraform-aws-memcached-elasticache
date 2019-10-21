@@ -1,5 +1,7 @@
 # terraform-aws-memcached-elasticache
 
+[![CircleCI](https://circleci.com/gh/azavea/terraform-aws-memcached-elasticache.svg?style=svg)](https://circleci.com/gh/azavea/terraform-aws-memcached-elasticache)
+
 A Terraform module to create an Amazon Web Services (AWS) Memcached ElastiCache cluster.
 
 ## Usage
