@@ -2,12 +2,12 @@
 # Security group resources
 #
 resource "aws_security_group" "memcached" {
-  vpc_id = "${var.vpc_id}"
+  vpc_id = var.vpc_id
 
-  tags {
+  tags = {
     Name        = "sgCacheCluster"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
+    Project     = var.project
+    Environment = var.environment
   }
 }
 
@@ -19,23 +19,27 @@ resource "aws_elasticache_cluster" "memcached" {
     create_before_destroy = true
   }
 
-  cluster_id             = "${format("%.16s-%.4s", lower(var.cache_identifier), md5(var.instance_type))}"
+  cluster_id = format(
+    "%.16s-%.4s",
+    lower(var.cache_identifier),
+    md5(var.instance_type),
+  )
   engine                 = "memcached"
-  engine_version         = "${var.engine_version}"
-  node_type              = "${var.instance_type}"
-  num_cache_nodes        = "${var.desired_clusters}"
-  az_mode                = "${var.desired_clusters == 1 ? "single-az" : "cross-az"}"
-  parameter_group_name   = "${var.parameter_group}"
-  subnet_group_name      = "${var.subnet_group}"
-  security_group_ids     = ["${aws_security_group.memcached.id}"]
-  maintenance_window     = "${var.maintenance_window}"
-  notification_topic_arn = "${var.notification_topic_arn}"
+  engine_version         = var.engine_version
+  node_type              = var.instance_type
+  num_cache_nodes        = var.desired_clusters
+  az_mode                = var.desired_clusters == 1 ? "single-az" : "cross-az"
+  parameter_group_name   = var.parameter_group
+  subnet_group_name      = var.subnet_group
+  security_group_ids     = [aws_security_group.memcached.id]
+  maintenance_window     = var.maintenance_window
+  notification_topic_arn = var.notification_topic_arn
   port                   = "11211"
 
-  tags {
+  tags = {
     Name        = "CacheCluster"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
+    Project     = var.project
+    Environment = var.environment
   }
 }
 
@@ -52,13 +56,13 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
   period              = "300"
   statistic           = "Average"
 
-  threshold = "${var.alarm_cpu_threshold_percent}"
+  threshold = var.alarm_cpu_threshold_percent
 
-  dimensions {
-    CacheClusterId = "${aws_elasticache_cluster.memcached.id}"
+  dimensions = {
+    CacheClusterId = aws_elasticache_cluster.memcached.id
   }
 
-  alarm_actions = ["${var.alarm_actions}"]
+  alarm_actions = var.alarm_actions
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_memory" {
@@ -71,11 +75,12 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
   period              = "60"
   statistic           = "Average"
 
-  threshold = "${var.alarm_memory_threshold_bytes}"
+  threshold = var.alarm_memory_threshold_bytes
 
-  dimensions {
-    CacheClusterId = "${aws_elasticache_cluster.memcached.id}"
+  dimensions = {
+    CacheClusterId = aws_elasticache_cluster.memcached.id
   }
 
-  alarm_actions = ["${var.alarm_actions}"]
+  alarm_actions = var.alarm_actions
 }
+
